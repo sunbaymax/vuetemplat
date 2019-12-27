@@ -176,7 +176,7 @@ export default {
 
     },
     onSearch () {
-      console.log("1");
+      console.log("125");
     },
     addmachine () {
       this.$router.push({
@@ -188,7 +188,7 @@ export default {
         path: '/UserCenter'
       })
     },
-    
+
   }
 };
 </script>  

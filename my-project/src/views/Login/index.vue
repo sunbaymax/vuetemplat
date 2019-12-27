@@ -60,14 +60,17 @@ export default {
           "user": this.username,
           "pwd": this.password,
           "userType": res.data.data.tag,
-          "copenid":res.data.data.content.openid,
+          "copenid": res.data.data.content.openid,
           "duodian": res.data.duodian == undefined ? 0 : _json.data.duodian
         }
 
         window.localStorage.setItem("useronline", JSON.stringify(xduser))
-        this.$router.push({
-          path: '/MachineList'
-        });
+        this.$toast.success("登录成功");
+        var that = this;
+        setTimeout(function () {
+          that.$router.push({ path: "/MachineList" });
+        }, 1500);
+
 
       }).catch(function (error) {
         console.log(error);
