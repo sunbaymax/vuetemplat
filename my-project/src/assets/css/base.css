@@ -6,7 +6,7 @@
 	box-sizing:border-box;
 	-moz-box-sizing:border-box;/*兼容低版本的浏览器*/
 	-webkit-box-sizing:border-box;/*为了兼容低版本的web*/
-	color:#000;
+	/* color:#000; */
 }
 body{
 	/* font-size:12px;
@@ -65,3 +65,38 @@ a:active{
 	*zoom:1;
 }/*兼容ie浏览器*/
 table{border-collapse:collapse;}
+.van-nav-bar{
+	background: #37c0c4;
+	height: 46px;
+	width: 100vw;
+	line-height: 46px;
+
+}
+.van-nav-bar__title{
+	color: #fff;
+}
+.van-nav-bar .van-icon {
+    color: #ffffff;
+    vertical-align: middle;
+}
+.van-nav-bar__text {
+    display: inline-block;
+   
+    color: #ffffff;
+    vertical-align: middle;
+}
+.btn{
+	position: absolute;
+	bottom: 30px;
+	width: 100%;
+	display: flex;
+	justify-content: space-around
+  }
+  .btnok{
+	width: 140px;
+	height: 44px;
+  }
+  .btncancel{
+	width: 140px;
+	height: 44px;
+  }
