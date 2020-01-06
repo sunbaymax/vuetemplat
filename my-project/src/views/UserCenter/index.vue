@@ -39,7 +39,7 @@
             <img src="@/assets/img/right_shop_car.png" class="righticon" />
           </p>
         </li>
-        <li>
+        <li @click="gocomproblem()">
           <p>
             <img src="@/assets/img/myquestions.png" class="biaozhu question" />
             <span>常见问题</span>
@@ -87,11 +87,25 @@ export default {
         path: '/MachineList'
       })
     },
-    exit(){
+    exit () {
+      var mymessage = confirm("请确定是否退出?");
+      if (mymessage == true) {
         window.localStorage.removeItem('useronline');
         window.sessionStorage.removeItem("goingpay");
         this.$router.push({
-            path:'/'
+          path: '/'
+        })
+      }
+      else { 
+        console.log("取消")
+         }
+
+
+    },
+    gocomproblem(){
+      console.log("1111")
+      this.$router.push({
+          path: '/CommonProblem'
         })
     }
 
@@ -108,16 +122,17 @@ body {
   background: #f2f2f2 !important;
 }
 ul {
-  padding: 5px 15px;
+  padding: 0px 5px;
 }
 ul li {
   list-style: none;
   background: #ffffff;
   padding: 0 15px;
+  margin-top: 10px;
   font-size: 14px;
   height: 54px;
   line-height: 54px;
-  margin: 5px 0px;
+  margin: 10px 0px;
   border-radius: 5px;
   display: flex;
   justify-content: space-between;

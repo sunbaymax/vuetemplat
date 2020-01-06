@@ -1,5 +1,5 @@
 <template>
-  <div class="contaiter">
+  <div id="main">
     <div class="machinetop">
       <div>
         <van-nav-bar title left-text="鲜盾">
@@ -19,90 +19,105 @@
         </div>
       </div>
     </div>
+    <div id="content">
+      <div class="movie_body">
+        <Loading v-if="isLoading" />
 
-    <div class="list-content">
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        :immediate-check="false"
-        finished-text="没有更多了"
-        loading-text="加载中..."
-        @load="onLoad"
-        :offset="10"
-      >
-        <van-cell class="list-item" v-for="(item,index) in itemList" :key="index">
-          <div class="list-item-top">
-            <p>
-              <span class="tittle">设备号：{{item.shebeibianhao}}</span>
-              <span v-show="item.beizhu.length>0" class="beizhu">({{item.beizhu}})</span>
-            </p>
-            <p>
-              <span v-if="item.is_master==1" class="master">主</span>
-              <span v-else>副</span>
-              <img src="@/assets/img/right_shop_car.png" class="rightimg" />
-            </p>
-          </div>
-          <div class="list-item-center">
-            <div>
-              <p>
-                温度1：
-                <span class="temp1">{{item.last_temperature01}}</span>℃
-              </p>
-              <p>
-                温度2：
-                <span class="temp2">{{item.last_temperature02}}</span>℃
-              </p>
-            </div>
-            <div>
-              <p>
-                湿度2：
-                <span class="humidity">{{item.last_humidity}}</span>%RH
-              </p>
-              <p>
-                电量：
-                <span class="power">{{item.last_power}}</span>%
-              </p>
-            </div>
-            <div>
-              <p>
-                信号强度：
-                <span class="signal" v-if="item.xinhaoqiangdu<=5">无信号</span>
-                <span class="signal" v-else-if="item.xinhaoqiangdu>5&&item.xinhaoqiangdu<=13">弱</span>
-                <span class="signal" v-else-if="item.xinhaoqiangdu>13&&item.xinhaoqiangdu<=20">良</span>
-                <span class="signal" v-else-if="item.xinhaoqiangdu>20&&item.xinhaoqiangdu<=26">好</span>
-                <span class="signal" v-else-if="item.xinhaoqiangdu>26&&item.xinhaoqiangdu<=100">强</span>
-                <span class="signal" v-else>无信号</span>
-              </p>
-              <p>
-                箱体状态：
-                <span class="boxstate">{{item.xiangzistate=='close'?'关闭':"打开"}}</span>
-              </p>
-            </div>
-            <div>
-              <p>
-                报警温度：
-                <span
-                  class="alarmArea"
-                >{{item.baojingwendu_xiaxian}}-{{item.baojingwendu_shangxian}}℃</span>
-              </p>
-              <p>
-                合格温度：
-                <span class="AcceptableArea">-38-38℃</span>
-              </p>
-            </div>
-            <div>
-              采集时间：
-              <span class="worktime">{{item.last_time}}</span>
-            </div>
-            <div>
-              位置：
-              <span class="address">{{item.address}}</span>
-            </div>
-          </div>
-        </van-cell>
-      </van-list>
-      <div class="no-data" v-if="!this.itemList">
-        <img src="@/assets/img/nothing-img.jpg" alt="暂无记录" class="img" />
+        <Scroller
+          v-else
+          :handleToScroll="handleToScroll"
+          :handleToTouchEnd="handleToTouchEnd"
+          ref="data_List"
+        >
+          <keep-alive>
+            <ul>
+              <!-- <li class="pullDown">{{ pullDownMsg }}</li> -->
+              <li v-for="item in itemList" :key="item.id" @tap="godetail(item.shebeibianhao)">
+                <div class="list-item-top">
+                  <p>
+                    <span class="tittle">设备号：{{item.shebeibianhao}}</span>
+                    <span v-show="item.beizhu.length>0" class="beizhu">({{item.beizhu}})</span>
+                  </p>
+                  <p class="listtopright">
+                    <span v-if="item.is_master==1" class="master">主</span>
+                    <span v-else>副</span>
+                    <img src="@/assets/img/right_shop_car.png" class="rightimg" />
+                  </p>
+                </div>
+                <div class="list-item-center">
+                  <div>
+                    <p>
+                      温度1：
+                      <span class="temp1">{{item.last_temperature01}}</span>℃
+                    </p>
+                    <p>
+                      温度2：
+                      <span class="temp2">{{item.last_temperature02}}</span>℃
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      湿度2：
+                      <span class="humidity">{{item.last_humidity}}</span>%RH
+                    </p>
+                    <p>
+                      电量：
+                      <span class="power">{{item.last_power}}</span>%
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      信号强度：
+                      <span class="signal" v-if="item.xinhaoqiangdu<=5">无信号</span>
+                      <span
+                        class="signal"
+                        v-else-if="item.xinhaoqiangdu>5&&item.xinhaoqiangdu<=13"
+                      >弱</span>
+                      <span
+                        class="signal"
+                        v-else-if="item.xinhaoqiangdu>13&&item.xinhaoqiangdu<=20"
+                      >良</span>
+                      <span
+                        class="signal"
+                        v-else-if="item.xinhaoqiangdu>20&&item.xinhaoqiangdu<=26"
+                      >好</span>
+                      <span
+                        class="signal"
+                        v-else-if="item.xinhaoqiangdu>26&&item.xinhaoqiangdu<=100"
+                      >强</span>
+                      <span class="signal" v-else>无信号</span>
+                    </p>
+                    <p>
+                      箱体状态：
+                      <span class="boxstate">{{item.xiangzistate=='close'?'关闭':"打开"}}</span>
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      报警温度：
+                      <span
+                        class="alarmArea"
+                      >{{item.baojingwendu_xiaxian}}-{{item.baojingwendu_shangxian}}℃</span>
+                    </p>
+                    <p>
+                      合格温度：
+                      <span class="AcceptableArea">-38-38℃</span>
+                    </p>
+                  </div>
+                  <div>
+                    采集时间：
+                    <span class="worktime">{{item.last_time}}</span>
+                  </div>
+                  <div>
+                    位置：
+                    <span class="address">{{item.address}}</span>
+                  </div>
+                </div>
+              </li>
+              <li class="pullDown" v-show="pullDownMsg">{{ pullDownMsg }}</li>
+            </ul>
+          </keep-alive>
+        </Scroller>
       </div>
     </div>
   </div>
@@ -114,14 +129,15 @@ export default {
     return {
       userobj: '',
       searchval: '',
-      loading: false,
-      finished: false,
-      page: 0,//请求第几页
-      pageSize: 5,//每页请求的数量
-      total: 0,//总共的数据条数
       itemList: [],
+      pullDownMsg: '',
+      isLoading: true,
+      prevCityId: -1,
+      page: 0,
+      total: 0
     };
   },
+
   created () {
     document.querySelector('body').setAttribute('style', 'background-color:#F2F2F2');
   },
@@ -135,6 +151,7 @@ export default {
 
   methods: {
     getroadList () {
+
       let params = {
         page: this.page,
         pageSize: this.pageSize
@@ -143,18 +160,25 @@ export default {
         openid: this.userobj.copenid,
         offset: this.page
       })).then((res) => {
+
         let rows = res.data.data.data; //请求返回当页的列表
-        this.loading = false;
-        this.total = res.data.count;
+        this.isLoading = false;
+        this.page = this.page + 5;
+        this.total = res.data.data.count;
         if (rows == null || rows.length === 0) {
           // 加载结束
-          this.finished = true;
+          this.pullDownMsg = "没有更多了";
+          this.$refs.data_List.scroll.refresh();
           return;
         }
         // 将新数据与老数据进行合并
         this.itemList = this.itemList.concat(rows);
+        console.log(this.itemList.length)
+        console.log(this.total)
         //如果列表数据条数>=总条数，不再触发滚动加载
-        if (this.itemList.length >= this.total) {
+        if (this.itemList.length >= this.total - 1) {
+          console.log("dayu")
+          this.pullDownMsg = "没有更多了";
           this.finished = true;
         }
 
@@ -162,19 +186,13 @@ export default {
         console.log(error);
       });
     },
+    godetail (index) {
+      console.log(index);
+      this.$router.push({ name: 'detaillist', params: { id: index } })
+    },
 
     //滚动加载时触发，list组件定义的方法
-    onLoad () {
 
-      this.page = this.page + 5;
-      var that = this;
-      setTimeout(function () {
-
-        that.getroadList();
-
-      }, 1500);
-
-    },
     onSearch () {
       console.log("125");
     },
@@ -183,21 +201,63 @@ export default {
         path: '/AddMachine'
       })
     },
-    gousercenter(){
-       this.$router.push({
+    gousercenter () {
+      this.$router.push({
         path: '/UserCenter'
       })
     },
+    handleChangeName (value) {
+      if (value === '') {
+        return false;
+      }
+      console.log(value)
+    },
+    handleToDetail (movieId) {
+      //console.log(movieId);
+      this.$router.push('/movie/detail/1/' + movieId);
+    },
+    handleToScroll (pos) {
+      if (pos.y > 30) {
+        // this.pullDownMsg = '正在更新中';
+      }
+    },
+    handleToTouchEnd (pos) {
+      if (pos.y > 30) {
+        this.$refs.data_List.scroll.refresh()
+      }
+      if (this.$refs.data_List.scroll.maxScrollY > pos.y + 10) {
+        //  console.log("加载更多");
+        this.pullDownMsg = "加载中...";
+        this.getroadList()
+      }
+    }
 
-  }
+
+
+  },
+
+  watch: {
+    searchval (curVal, oldVal) {
+      // 实现input连续输入，只发一次请求
+      clearTimeout(this.timeout)
+      this.timeout = setTimeout(() => {
+        this.handleChangeName(curVal)
+      }, 500)
+    }
+  },
+
+
 };
 </script>  
 <style scoped>
-html,
-body {
-  width: 100%;
-  height: 100%;
-  background: #f2f2f2 !important;
+#content .movie_body {
+  flex: 1;
+  overflow: auto;
+}
+.movie_body ul {
+  margin: 0px 5px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 .machinetop {
   position: fixed;
@@ -223,12 +283,39 @@ body {
 .van-nav-bar .van-icon:last-child {
   margin: 0;
 }
-.list-content {
+.content {
+  margin-top: 110px;
+}
+.movie_body {
+  flex: 1;
+  overflow: auto;
+  margin-top: 100px;
+}
+/* .movie_body ul {
+  padding: 0 15px;
+  box-sizing: border-box;
+} */
+ul li {
+  font-size: 14px;
+  background: #ffffff;
+  padding: 0 10px;
+  border-radius: 5px;
+}
+
+/* .movie_body ul li {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px #e6e6e6 solid;
+  padding-bottom: 10px;
+} */
+ul li .list-content {
   margin-top: 105px;
   /* overflow: scroll; */
   padding: 0 15px;
+  box-sizing: border-box;
 }
-.list-item {
+ul li .list-item {
   background: #ffffff;
   width: 100%;
   height: auto;
@@ -238,46 +325,56 @@ body {
   box-sizing: border-box;
   margin-top: 10px;
 }
-.list-item-top {
+ul li .list-item-top {
   height: 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #cccccc;
 }
-.list-item-top .tittle {
+li .list-item-top .tittle {
   color: #1b1b1b;
   font-size: 15px;
   font-weight: bold;
 }
-.list-item-top .beizhu {
+li .list-item-top .listtopright {
+  display: flex;
+  align-items: center;
+}
+li .list-item-top .beizhu {
   margin-left: 15px;
   color: #c90000;
   font-size: 12px;
   font-weight: bold;
 }
-.master {
+li .master {
   margin-right: 15px;
   font-size: 12px;
   color: #37c0c4;
 }
-.list-item-top .rightimg {
+li .list-item-top .rightimg {
   height: 14px;
   width: 10px;
 }
-.list-item-center {
+li .list-item-center {
   color: #7a7a7a;
 }
-.list-item-center div {
+li .list-item-center div {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   height: 30px;
 }
+.movie_body ul li {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  border-bottom: 1px #e6e6e6 solid;
+  padding-bottom: 10px;
+}
 .list-item-center div p {
-  width: 100%;
-  /* overflow: hidden;
-text-overflow:ellipsis;
-white-space: nowrap; */
+  width: 180px;
 }
 
 .address {
@@ -286,5 +383,14 @@ white-space: nowrap; */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+ul .pullDown {
+  text-align: center;
+  background: none;
+  height: 20px;
+  line-height: 20px;
+  color: #666666;
+  padding: 0;
+  margin: 0;
 }
 </style>

@@ -33,6 +33,11 @@ Vue.use(Icon);
 Vue.use(Cell).use(CellGroup);
 Vue.use(Field);
 Vue.use(Image);
+import Scroller from '@/component/Scroller'
+Vue.component('Scroller' , Scroller);
+
+import Loading from '@/component/Loading'
+Vue.component('Loading',Loading);
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
 Vue.prototype.$qs = qs

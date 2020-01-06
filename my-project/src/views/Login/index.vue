@@ -92,6 +92,8 @@ export default {
   height: auto;
   margin: 146px auto 72px;
   text-align: center;
+  display: flex;
+  justify-content: center;
 }
 .xiandunlogo img {
   width: 72px;

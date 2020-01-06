@@ -30,7 +30,22 @@ const routes = [
     path: '/UserCenter',
     name: 'usercenter',   
     component: () => import('../views/UserCenter')
-  }
+  },
+  {
+    path: '/DetailList/:id',
+    name: 'detaillist',   
+    component: () => import('../views/DetailList')
+  },
+  {
+    path: '/CommonProblem',
+    name: 'commonproblem',   
+    component: () => import('../views/UserCenter/CommonProblem')
+  },
+  {
+    path: '/Test',
+    name: 'test',   
+    component: () => import('../views/Test')
+  },
 
 ]
 
