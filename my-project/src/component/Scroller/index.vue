@@ -26,15 +26,15 @@ export default {
     var scroll = new BScroll(this.$refs.wrapper, {
       tap: true,
       probeType: 1,
-      useTransition: false,
-      scrollY: true,
-      pullDownRefresh: {
-        threshold: 50,
-        probeType: 3
-      },
-      pullUpLoad: {
-        threshold: 744
-      }
+       snap: {  // 滑动切换的一些配置
+        speed: 800,  // 滑动切换的速度
+        
+       }
+      // useTransition: false,
+      // scrollY: true,
+      // pullUpLoad: {
+      //   threshold: 744
+      // }
 
 
     });

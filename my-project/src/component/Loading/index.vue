@@ -1,5 +1,5 @@
 <template>
-    <div class="container1">
+    <div class="container">
  <div class="loading"></div>
 </div>
 </template>
@@ -11,7 +11,7 @@ export default {
 </script>
 
 <style scoped>
-.container1 {
+.container {
  position: absolute;
  left: 50%;
  bottom: 50%;

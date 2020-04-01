@@ -1,107 +1,63 @@
 <template>
-    <div class="rules">
-        <p class="drop-down" v-if="dropDown">松手刷新数据...</p>
-        <div class="bscroll" ref="bscroll">
-            <div class="bscroll-container">
-                <ul>
-                   <li>1</li><li>1</li><li>1</li>
-                   <li>1</li><li>1</li><li>1</li>
-                   <li>1</li><li>1</li><li>1</li>
-                   <li>1</li><li>1</li><li>1</li>
-                   <li>1</li><li>1</li><li>1</li>
-                   <li>1</li><li>1</li><li>1</li>
-                   <li>1</li><li>1</li><li>1</li>
-                   <li>1</li><li>1</li><li>1</li>
-                   <li>1</li><li>1</li><li>1</li>
-                   <li>1</li><li>1</li><li>1</li>
-                   <li>1</li><li>1</li><li>1</li>
-                   <li>1</li><li>1</li><li>1</li>
-                   <li>1</li><li>1</li><li>1</li>
-                   <li>1</li><li>1</li><li>2</li>
-                </ul>
-            </div>
-        </div>
-        <!-- <p class="x">加载更多...</p> -->
+    <div>
+<div class="baidumap" id="allmap"></div>
     </div>
 </template>
- 
+
 <script>
-import BScroll from 'better-scroll'
 export default {
     data(){
         return{
-            dropDown:false
+            // longitude: 121.833138, 
+            // latitude: 39.081725,
+            longitude: 116.12503052,
+latitude: 37.06930923,
         }
     },
-    mounted(){
-        this.scrollFn()
+    name: 'pm-distribution',
+    components: {
+      
     },
-    methods:{
-        scrollFn(){
-            this.$nextTick(() => {
-                if (!this.scroll) {
-                    this.scroll = new BScroll(this.$refs.bscroll, {
-                        click: true,
-                        scrollY: true,
-                        probeType: 3
-                    });
-                }else{
-                    this.scroll.refresh();
-                }
-                this.scroll.on('scroll', (pos) => {
-                    //console.log(pos.y,this.dropDown)
-                    //如果下拉超过50px 就显示下拉刷新的文字
-                    if(pos.y>50){
-                        this.dropDown = true
-                    }else{
-                        this.dropDown = false
-                    }
-                })
-                //touchEnd（手指离开以后触发） 通过这个方法来监听下拉刷新
-                this.scroll.on('touchEnd', (pos) => {
-                    // 下拉动作
-                    if(pos.y > 50){
-                        console.log("下拉刷新成功")
-                        this.dropDown = false
-                    }
-                    //上拉加载 总高度>下拉的高度+10 触发加载更多
-                    if(this.scroll.maxScrollY>pos.y+10){
-                        console.log("加载更多")
-                        //使用refresh 方法 来更新scroll  解决无法滚动的问题
-                         this.scroll.refresh()
-                    }
-                    //console.log(this.scroll.maxScrollY+"总距离----下拉的距离"+pos.y)
-                })
-                //console.log(this.scroll.maxScrollY)
-            });
+    mounted() {
+        this.baiduMap()
+    },
+    methods: {
+        baiduMap() {
+            let point = new BMap.Point(this.longitude, this.latitude)
+            let gc = new BMap.Geocoder()
+            gc.getLocation(point, function(rs){
+                console.log(rs)
+            const addComp = rs.addressComponents
+            // 可以通过addComp对象获取到省、市、县、区、街道多少号等信息
+            const province = addComp.province
+        
+            console.log('addComp json: ' + JSON.stringify(addComp))
+            console.log('province' + addComp.province)
+    })
+
         }
     }
 }
 </script>
- 
- 
-<style scoped>
-.bscroll{
-    width: 100%;
-    height:500px;
-    overflow: hidden;
-}
-ul li{
-    width: 100px;
-    height: 40px;
-}
-.bscroll-container{
-    background: #ff0000;
-}
-.drop-down{
+
+<style lang="scss" scoped>
+.baidumap {
+    width: 1000px;
+    height: 500px;
+    border: 1px solid red;
     position: absolute;
-    top:0px;
-    lefT:0px;
-    width: 100%;
-    height: 50px;
-    line-height:50px;
-    text-align: center;
-    font-size:0.8rem;
-    color:#CCC;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+/* 去除百度地图版权那行字 和 百度logo */
+.baidumap > .BMap_cpyCtrl {
+    display: none !important;
+}
+.baidumap > .anchorBL {
+    display: none !important;
 }
 </style>

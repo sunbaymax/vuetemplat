@@ -2,7 +2,7 @@
   <div class="contaiter">
     <div class="machinetop">
       <div>
-        <van-nav-bar title left-text="鲜盾">
+        <van-nav-bar title left-text="Linke云平台">
           <van-icon name="plus" slot="right" @click="addmachine()" />
           <van-icon name="user-o" slot="right" @click="gousercenter()" />
         </van-nav-bar>
